@@ -1,0 +1,77 @@
+@font-face {
+  font-family: 'Overpass';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Overpass Regular'), local('Overpass-Regular'), url(/media/fonts/Overpass-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Overpass';
+  font-style: normal;
+  font-weight: 900;
+  src: local('Overpass Black'), local('Overpass-Black'), url(/media/fonts/Overpass-Black.ttf) format('truetype');
+}
+
+.container {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1 {
+  text-align: center;
+  font-family: Overpass;
+  font-size: 48px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.status h2 {
+  font-family: Overpass;
+  font-size: 28px;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 0;
+}
+
+.status h3 {
+  font-family: Overpass;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.me {
+  width: 280px;
+  height: 280px;
+  margin: 0 auto;
+}
+
+.social {
+  max-width: 320px;
+  min-width: 320px;
+  margin: 0 auto;
+}
+
+.social .site {
+  margin-left: auto;
+  margin-right: auto;
+  
+}
+.social .site a {
+  font-family: Overpass;
+  font-size: 24px;
+  text-decoration: none;
+}
+.social .site a img {
+  position: relative;
+  top: 24px;
+  width: 64px;
+  height: 64px;
+  margin-right: 8px;
+}
