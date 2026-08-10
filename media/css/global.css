@@ -2,41 +2,121 @@
   font-family: 'Overpass';
   font-style: normal;
   font-weight: 400;
-  src: local('Overpass Regular'), local('Overpass-Regular'), url(/media/fonts/Overpass-Regular.ttf) format('truetype');
+  font-display: swap;
+  src: url(/media/fonts/Overpass-Regular.woff2) format('woff2'),
+       url(/media/fonts/Overpass-Regular.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Overpass';
   font-style: normal;
   font-weight: 900;
-  src: local('Overpass Black'), local('Overpass-Black'), url(/media/fonts/Overpass-Black.ttf) format('truetype');
+  font-display: swap;
+  src: url(/media/fonts/Overpass-Black.woff2) format('woff2'),
+       url(/media/fonts/Overpass-Black.ttf) format('truetype');
+}
+
+:root {
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #59595f;
+  --link: #0b5fd0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e0e10;
+    --fg: #f1f1f3;
+    --muted: #a3a3ab;
+    --link: #7fb2ff;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: Overpass, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: var(--link);
+}
+
+:focus-visible {
+  outline: 3px solid var(--link);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 .container {
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
+  padding: 32px 20px 64px;
 }
 
 h1 {
   text-align: center;
-  font-family: Overpass;
-  font-size: 48px;
+  font-size: clamp(34px, 9vw, 48px);
   font-weight: 900;
   text-transform: uppercase;
+  line-height: 1.1;
+  margin: 8px 0 36px;
+}
+
+.status {
+  margin-bottom: 30px;
 }
 
 .status h2 {
-  font-family: Overpass;
-  font-size: 28px;
+  font-size: clamp(22px, 5.5vw, 28px);
   font-weight: 900;
   text-transform: uppercase;
-  margin-bottom: 0;
+  margin: 0 0 8px;
 }
 
 .status h3 {
-  font-family: Overpass;
-  font-size: 20px;
+  font-size: clamp(17px, 4.4vw, 20px);
   font-weight: 400;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.status .aside {
+  color: var(--muted);
+  font-size: clamp(15px, 3.9vw, 17px);
+  line-height: 1.45;
+  margin: 12px 0 0;
+}
+
+.projects {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.projects li {
+  font-size: clamp(17px, 4.4vw, 20px);
+  line-height: 1.45;
+  margin-bottom: 12px;
+}
+
+.projects li:last-child {
+  margin-bottom: 0;
+}
+
+.projects .desc {
+  color: var(--muted);
 }
 
 .main {
@@ -44,34 +124,47 @@ h1 {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  gap: 32px;
+  margin-top: 44px;
 }
 
 .me {
   width: 280px;
-  height: 280px;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  display: block;
   margin: 0 auto;
 }
 
 .social {
-  max-width: 320px;
-  min-width: 320px;
+  flex: 1 1 300px;
+  max-width: 340px;
   margin: 0 auto;
 }
 
-.social .site {
-  margin-left: auto;
-  margin-right: auto;
-  
-}
 .social .site a {
-  font-family: Overpass;
-  font-size: 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 9px 2px;
+  font-size: clamp(19px, 4.6vw, 22px);
+  color: var(--fg);
   text-decoration: none;
 }
-.social .site a img {
-  position: relative;
-  top: 24px;
-  width: 64px;
-  height: 64px;
-  margin-right: 8px;
+
+.social .site a span {
+  color: var(--link);
+}
+
+.social .site a:hover span,
+.social .site a:focus-visible span {
+  text-decoration: underline;
+}
+
+.social .site svg {
+  width: 48px;
+  height: 48px;
+  flex: none;
+  fill: currentColor;
 }
