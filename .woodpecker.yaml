@@ -1,0 +1,68 @@
+steps:
+  - name: validate
+    image: docker.io/library/busybox:1.37.0-musl@sha256:fc6dddc4c44b1bfe37f41cae8e67d1693828e8f42a91862816d7953e2c9d3f23
+    commands:
+      - test -s index.html
+      - test -s favicon.ico
+      - test -s media/css/global.css
+      - test -s media/fonts/Overpass-Black.woff2
+      - test -s media/images/me.jpg
+      - grep -Fq 'media/css/global.css' index.html
+
+  - name: publish-immutable-image
+    image: docker.io/moby/buildkit:v0.30.0-rootless@sha256:d76eb1caecac5733ef7553c1e90a1b21f1bb218cd1142d3553de0747b4a14ba9
+    depends_on:
+      - validate
+    when:
+      - evaluate: 'CI_PIPELINE_EVENT == "push" && CI_COMMIT_BRANCH == CI_REPO_DEFAULT_BRANCH'
+    commands:
+      - |-
+        set -eu
+        buildkit_addr=tcp://buildkit.ci-build.svc.cluster.local:1234
+        attempt=0
+        until buildctl --addr "$${buildkit_addr}" debug workers >/dev/null 2>&1; do
+          attempt=$$((attempt + 1))
+          if [ "$${attempt}" -ge 30 ]; then
+            echo "BuildKit did not become ready" >&2
+            exit 1
+          fi
+          sleep 2
+        done
+        build_time="$$(date -u -d "@$${CI_PIPELINE_CREATED}" +%Y%m%d%H%M%S)"
+        short_sha="$$(printf '%s' "$${CI_COMMIT_SHA}" | cut -c1-12)"
+        image_tag="main-$${build_time}-$${short_sha}"
+        buildctl --addr "$${buildkit_addr}" build \
+          --frontend dockerfile.v0 \
+          --local context=. \
+          --local dockerfile=. \
+          --opt filename=Dockerfile \
+          --opt platform=linux/amd64 \
+          --opt "label:org.opencontainers.image.source=$${CI_REPO_URL}" \
+          --opt "label:org.opencontainers.image.revision=$${CI_COMMIT_SHA}" \
+          --opt "label:org.opencontainers.image.created=$$(date -u -d "@$${CI_PIPELINE_CREATED}" +%Y-%m-%dT%H:%M:%SZ)" \
+          --opt attest:provenance=mode=max \
+          --output "type=image,name=registry.clouderic.svc.cluster.local:5000/eflorenzano:$${image_tag},push=true,registry.insecure=true"
+        printf 'Published eflorenzano at immutable tag %s\n' "$${image_tag}"
+    backend_options:
+      kubernetes:
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: "1"
+            memory: 1Gi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          fsGroup: 1000
+          fsGroupChangePolicy: OnRootMismatch
+          seccompProfile:
+            type: RuntimeDefault
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: [ALL]
+
+when:
+  - event: [push, pull_request]

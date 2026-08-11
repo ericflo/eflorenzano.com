@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1@sha256:87999aa3d42bdc6bea60565083ee17e86d1f3339802f543c0d03998580f9cb89
 #
 # Self-contained static server for eflorenzano.com.
 #
@@ -8,7 +8,7 @@
 # Runs nginx as an unprivileged user on port 8080, so it needs no root and no
 # extra files — the config lives in this Dockerfile.
 
-FROM nginx:1.27-alpine
+FROM nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
 
 # Replace the stock config wholesale. Everything nginx needs to write goes to
 # /tmp so the whole filesystem can stay read-only under an unprivileged user.
