@@ -8,7 +8,7 @@
 # Runs nginx as an unprivileged user on port 8080, so it needs no root and no
 # extra files — the config lives in this Dockerfile.
 
-FROM nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949
+FROM docker.io/library/nginx:1.30.7-alpine@sha256:bef154735288bc38d99fac41ae63730684bcc661503673a04a0f9bc526ba8598
 
 # Apply stable Alpine security fixes released after the pinned base was built.
 RUN apk upgrade --no-cache
