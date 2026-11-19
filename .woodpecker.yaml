@@ -1,6 +1,6 @@
 steps:
   - name: validate
-    image: docker.io/library/busybox:1.37.0-musl@sha256:fc6dddc4c44b1bfe37f41cae8e67d1693828e8f42a91862816d7953e2c9d3f23
+    image: docker.io/library/busybox:1.37.0-musl@sha256:f6a95d611e0a8780fabdb2aec43e31275b2720dfefa3e41b16835bfc42454478
     commands:
       - test -s index.html
       - test -s favicon.ico
@@ -10,7 +10,7 @@ steps:
       - grep -Fq 'media/css/global.css' index.html
 
   - name: publish-immutable-image
-    image: docker.io/moby/buildkit:v0.34.2-rootless@sha256:c8252268760e1baba80780d63d738ef9f260fb7c7c0973c78494cb9ddd99eda1
+    image: localhost:32000/epsilon-buildkit:main-20261119070655-a24d45762658@sha256:85e0c6ae37f5d1f29225442ee1ca8ff626ada7aed01319ca6a3ef627a1f2c3c3
     depends_on:
       - validate
     when:
